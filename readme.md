@@ -1,65 +1,88 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
+# Laravel+JWT+Dingo构建API
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+**说明**
++ Laravel：`5.6.*`
++ tymon/jwt-auth: `dev-develop`
++ dingo/api: `2.0.0-alpha1`
 
-## About Laravel
+该项目可以快速搭建`Laravel+JWT+Dingo`环境，免去了自己填坑。
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as:
+# 项目配置
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 下载项目
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications.
+```bash
+$ git clone https://github.com/openexw/laravel-api.git
+```
 
-## Learning Laravel
+## 更新`composer`
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of any modern web application framework, making it a breeze to get started learning the framework.
+```bash
+$ composre update
+```
 
-If you're not in the mood to read, [Laracasts](https://laracasts.com) contains over 1100 video tutorials on a range of topics including Laravel, modern PHP, unit testing, JavaScript, and more. Boost the skill level of yourself and your entire team by digging into our comprehensive video library.
+## 生成项目的`key`
 
-## Laravel Sponsors
+```bash
+$ php artisan key:generate
+```
 
-We would like to extend our thanks to the following sponsors for helping fund on-going Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell):
+## 生成jwt的`secret`
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
+```bash
+$ php artisan jwt:secret
+```
 
-## Contributing
+# 使用
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+> 注意在`.env`中配置正确的数据库
 
-## Security Vulnerabilities
+## 生成数据库
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+$ php artisan migrate
+```
 
-## License
+## 使用`tinker`数据生成
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+$ php artisan tinker
+```
+
+填充数据：
+
+```bash
+Psy Shell v0.9.9 (PHP 7.2.1 — cli) by Justin Hileman
+>>> factory('App\User')->create()
+>>> factory('App\Models\News', 20)->create()
+```
+
+# 测试
+
+## 查看所有的路由
+
+```bash
+$ php artisan api:routes
+  +------+----------+--------------------+------+------------------------------------------------+-----------+------------+----------+------------+
+  | Host | Method   | URI                | Name | Action                                         | Protected | Version(s) | Scope(s) | Rate Limit |
+  +------+----------+--------------------+------+------------------------------------------------+-----------+------------+----------+------------+
+  |      | GET|HEAD | /api/news          |      | App\Api\Controllers\v1\NewsController@index    | No        | v1         |          |            |
+  |      | GET|HEAD | /api/news/{id}     |      | App\Api\Controllers\v1\NewsController@show     | No        | v1         |          |            |
+  |      | POST     | /api/user/login    |      | App\Api\Controllers\v1\AuthController@login    | No        | v1         |          |            |
+  |      | POST     | /api/user/register |      | App\Api\Controllers\v1\AuthController@register | No        | v1         |          |            |
+  |      | GET|HEAD | /api/user/me       |      | App\Api\Controllers\v1\AuthController@profile  | No        | v1         |          |            |
+  +------+----------+--------------------+------+------------------------------------------------+-----------+------------+----------+------------+
+```
+
+## 使用postman请求数据
+
+自测
+
+# 文档生成
+
+```bash
+$ php artisan api:docs --version v1 --output-file User.md
+```
+
+> 在项目的根目录就会生`User.md`文档。
+
